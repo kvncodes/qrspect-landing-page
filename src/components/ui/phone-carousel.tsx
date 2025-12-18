@@ -22,6 +22,11 @@ const Iphone15Pro: React.FC<Iphone15ProProps> = ({
 	className,
 	...props
 }) => {
+	// Generate unique ID for clipPath to avoid conflicts
+	const clipPathId = useRef(
+		`clip-${Math.random().toString(36).substr(2, 9)}`
+	);
+
 	return (
 		<div
 			className={cn("relative w-full", className)}
@@ -75,27 +80,43 @@ const Iphone15Pro: React.FC<Iphone15ProProps> = ({
 					className="dark:fill-[#F5F5F5] fill-[#404040] dark:stroke-[#E0E0E0] stroke-[#404040] stroke-[0.5]"
 					filter="drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.1))"
 				/>
+				<defs>
+					<clipPath id={clipPathId.current}>
+						<rect
+							x="21.25"
+							y="19.25"
+							width="389.5"
+							height="843.5"
+							rx="55.75"
+							ry="55.75"
+						/>
+					</clipPath>
+				</defs>
 				{src && (
 					<foreignObject
 						x="21.25"
 						y="19.25"
 						width="389.5"
 						height="843.5"
-						clipPath="url(#roundedCorners)"
-						xmlns="http://www.w3.org/1999/xhtml"
+						clipPath={`url(#${clipPathId.current})`}
 					>
 						<div
 							style={{
 								width: "100%",
 								height: "100%",
-								position: "relative",
+								overflow: "hidden",
+								borderRadius: "55.75px",
 							}}
 						>
 							<img
 								src={src || "/placeholder.svg"}
 								alt={alt}
-								className="w-full h-full object-cover"
-								sizes="(max-width: 768px) 80vw, (max-width: 1200px) 50vw, 33vw"
+								style={{
+									width: "100%",
+									height: "100%",
+									objectFit: "cover",
+									display: "block",
+								}}
 							/>
 						</div>
 					</foreignObject>
@@ -118,18 +139,6 @@ const Iphone15Pro: React.FC<Iphone15ProProps> = ({
 					d="M76 4C37.3401 4 6 35.3401 6 74V808C6 846.66 37.3401 878 76 878H356C394.66 878 426 846.66 426 808V74C426 35.3401 394.66 4 356 4H76Z"
 					className="fill-transparent dark:stroke-white/20 stroke-[0.5] stroke-transparent"
 				/>
-				<defs>
-					<clipPath id="roundedCorners">
-						<rect
-							x="21.25"
-							y="19.25"
-							width="389.5"
-							height="843.5"
-							rx="55.75"
-							ry="55.75"
-						/>
-					</clipPath>
-				</defs>
 			</svg>
 		</div>
 	);
@@ -284,15 +293,15 @@ export const PhoneCarousel: React.FC<PhoneCarouselProps> = ({
 					{/* Main carousel container */}
 					<div
 						ref={carouselRef}
-						className="relative flex items-center justify-center overflow-visible"
-						style={{ height: isMobile ? "450px" : "570px" }}
+						className="relative flex items-center justify-center"
+						style={{
+							height: isMobile ? "450px" : "570px",
+							overflow: "visible",
+						}}
 					>
 						<div
-							className="relative flex items-center justify-center"
-							style={{
-								width: isMobile ? "240px" : "320px",
-								height: "100%",
-							}}
+							className="relative flex items-center justify-center w-full"
+							style={{ maxWidth: isMobile ? "240px" : "320px" }}
 						>
 							{images.map((image, index) => {
 								const isActive = index === currentIndex;
@@ -311,12 +320,13 @@ export const PhoneCarousel: React.FC<PhoneCarouselProps> = ({
 									: isNext
 									? phoneWidth * 0.65
 									: 0;
+								const scale = isActive ? 1 : 0.85;
 
 								return (
 									<div
 										key={index}
 										className={cn(
-											"absolute transition-all duration-700 ease-in-out",
+											"absolute top-1/2 left-1/2 transition-all duration-700 ease-in-out",
 											isActive
 												? "z-20 opacity-100"
 												: "opacity-0",
@@ -325,15 +335,8 @@ export const PhoneCarousel: React.FC<PhoneCarouselProps> = ({
 										)}
 										style={{
 											width: `${phoneWidth}px`,
-											transform: `translateX(${offsetX}px) scale(${
-												isActive ? 1 : 0.85
-											})`,
-											top: "50%",
-											left: "50%",
-											marginLeft: `-${phoneWidth / 2}px`,
-											marginTop: `-${
-												isMobile ? "225px" : "285px"
-											}`,
+											transform: `translate(-50%, -50%) translateX(${offsetX}px) scale(${scale})`,
+											WebkitTransform: `translate(-50%, -50%) translateX(${offsetX}px) scale(${scale})`,
 										}}
 										aria-hidden={!isActive}
 									>
