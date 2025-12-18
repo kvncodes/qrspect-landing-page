@@ -81,6 +81,7 @@ const Iphone15Pro: React.FC<Iphone15ProProps> = ({
 						width="389.5"
 						height="843.5"
 						clipPath="url(#roundedCorners)"
+						xmlns="http://www.w3.org/1999/xhtml"
 					>
 						<div
 							style={{
@@ -89,13 +90,11 @@ const Iphone15Pro: React.FC<Iphone15ProProps> = ({
 								position: "relative",
 							}}
 						>
-							<Image
+							<img
 								src={src || "/placeholder.svg"}
 								alt={alt}
-								fill
-								style={{ objectFit: "cover" }}
+								className="w-full h-full object-cover"
 								sizes="(max-width: 768px) 80vw, (max-width: 1200px) 50vw, 33vw"
-								priority
 							/>
 						</div>
 					</foreignObject>
@@ -220,7 +219,7 @@ export const PhoneCarousel: React.FC<PhoneCarouselProps> = ({
 							<Iphone15Pro
 								className={`${
 									isMobile ? "w-[280px]" : "w-[300px]"
-								} h-auto`}
+								}`}
 								src={prevImage.src}
 								alt={prevImage.alt}
 							/>
