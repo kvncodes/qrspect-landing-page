@@ -54,7 +54,7 @@ export default function Hero() {
 			</motion.h1>
 			<motion.p
 				variants={heroItem}
-				className="max-w-175 text-center text-xl md:text-2xl mt-14 leading-10"
+				className="max-w-175 text-center text-xl md:text-2xl mt-14 leading-10 mix-blend-exclusion"
 			>
 				Your personal security guard against malicious QR codes.
 				Instantly detect{" "}
