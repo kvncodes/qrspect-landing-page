@@ -29,7 +29,11 @@ const Iphone15Pro: React.FC<Iphone15ProProps> = ({
 				preserveAspectRatio="xMidYMid meet"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"
-				className={`transition-all duration-500 ease-in-out w-${width} h-${height}`}
+				className={`transition-all duration-500 ease-in-out`}
+				style={{
+					width,
+					height,
+				}}
 				{...props}
 			>
 				{/* Outer frame */}
@@ -207,7 +211,7 @@ export const PhoneCarousel: React.FC<PhoneCarouselProps> = ({
 					<div className="absolute top-0 left-1/2 transform -translate-x-1/2">
 						{/* 1) Back phone (prev) */}
 						<div
-							className="absolute opacity-60 w-[280px] aspect-[433/882]"
+							className="absolute opacity-60"
 							style={{
 								transform: "translateY(-20px) scale(0.92)",
 								zIndex: 10,
@@ -215,7 +219,7 @@ export const PhoneCarousel: React.FC<PhoneCarouselProps> = ({
 						>
 							<Iphone15Pro
 								className={`${
-									isMobile ? "w-70" : "w-75"
+									isMobile ? "w-[280px]" : "w-[300px]"
 								} h-auto`}
 								src={prevImage.src}
 								alt={prevImage.alt}
