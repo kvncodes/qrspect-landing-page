@@ -23,17 +23,18 @@ const Iphone15Pro: React.FC<Iphone15ProProps> = ({
 	...props
 }) => {
 	return (
-		<div className={cn("relative", className)}>
+		<div
+			className={cn("relative w-full", className)}
+			style={{
+				maxWidth: typeof width === "number" ? `${width}px` : width,
+			}}
+		>
 			<svg
 				viewBox="0 0 433 882"
 				preserveAspectRatio="xMidYMid meet"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"
-				className={`transition-all duration-500 ease-in-out`}
-				style={{
-					width,
-					height,
-				}}
+				className="w-full h-auto"
 				{...props}
 			>
 				{/* Outer frame */}
@@ -192,7 +193,6 @@ export const PhoneCarousel: React.FC<PhoneCarouselProps> = ({
 		const prev = (active - 1 + total) % total;
 		const next = (active + 1) % total;
 
-		// Each feature has a single image
 		const prevImage = featuresData[prev].images[0];
 		const activeImage = featuresData[active].images[0];
 		const nextImage = featuresData[next].images[0];
@@ -200,58 +200,55 @@ export const PhoneCarousel: React.FC<PhoneCarouselProps> = ({
 		return (
 			<section
 				className={cn(
-					"relative w-full py-6 md:py-10 overflow-visible",
+					"relative w-full py-6 md:py-10 overflow-hidden",
 					className
 				)}
 				aria-label="iPhone product showcase in feature mode"
 			>
-				<div className="relative h-[600px] sm:h-[650px] lg:h-[700px] w-full">
-					{/* Center the phone stack */}
-					<div className="absolute top-0 left-1/2 transform -translate-x-1/2">
-						{/* 1) Back phone (prev) */}
+				<div className="relative h-[550px] sm:h-[600px] md:h-[650px] lg:h-[700px] w-full flex items-center justify-center">
+					<div className="relative w-full max-w-[280px] sm:max-w-[300px] md:max-w-[350px] mx-auto">
+						{/* Back phone (prev) */}
 						<div
-							className="absolute opacity-60"
+							className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-60 w-full"
 							style={{
-								transform: "translateY(-20px) scale(0.92)",
+								transform:
+									"translate(-50%, calc(-50% - 20px)) scale(0.92)",
 								zIndex: 10,
 							}}
 						>
 							<Iphone15Pro
-								className={`${
-									isMobile ? "w-[280px]" : "w-[300px]"
-								}`}
+								width="100%"
 								src={prevImage.src}
 								alt={prevImage.alt}
 							/>
 						</div>
 
-						{/* 2) Middle phone (next) */}
+						{/* Middle phone (next) */}
 						<div
-							className="absolute opacity-80"
+							className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-80 w-full"
 							style={{
-								transform: "translateY(25px) scale(0.96)",
+								transform:
+									"translate(-50%, calc(-50% + 25px)) scale(0.96)",
 								zIndex: 20,
 							}}
 						>
 							<Iphone15Pro
-								width={isMobile ? 280 : 350}
-								height="auto"
+								width="100%"
 								src={nextImage.src}
 								alt={nextImage.alt}
 							/>
 						</div>
 
-						{/* 3) Front phone (active) */}
+						{/* Front phone (active) */}
 						<div
-							className="relative"
+							className="relative w-full"
 							style={{
-								transform: "translateY(70px) scale(1)",
+								transform: "translateY(70px)",
 								zIndex: 30,
 							}}
 						>
 							<Iphone15Pro
-								width={isMobile ? 280 : 350}
-								height="auto"
+								width="100%"
 								src={activeImage.src}
 								alt={activeImage.alt}
 							/>
@@ -287,9 +284,16 @@ export const PhoneCarousel: React.FC<PhoneCarouselProps> = ({
 					{/* Main carousel container */}
 					<div
 						ref={carouselRef}
-						className="flex justify-center items-start h-[410px] md:h-[510px] lg:h-[520px]"
+						className="relative flex items-center justify-center overflow-visible"
+						style={{ height: isMobile ? "450px" : "570px" }}
 					>
-						<div className="relative flex justify-center w-full">
+						<div
+							className="relative flex items-center justify-center"
+							style={{
+								width: isMobile ? "240px" : "320px",
+								height: "100%",
+							}}
+						>
 							{images.map((image, index) => {
 								const isActive = index === currentIndex;
 								const isPrevious =
@@ -301,49 +305,43 @@ export const PhoneCarousel: React.FC<PhoneCarouselProps> = ({
 									(currentIndex === images.length - 1 &&
 										index === 0);
 
+								const phoneWidth = isMobile ? 240 : 320;
+								const offsetX = isPrevious
+									? -phoneWidth * 0.65
+									: isNext
+									? phoneWidth * 0.65
+									: 0;
+
 								return (
 									<div
 										key={index}
 										className={cn(
-											"absolute transition-all duration-700 ease-in-out transform",
+											"absolute transition-all duration-700 ease-in-out",
 											isActive
-												? "z-20 scale-100"
-												: "opacity-0 scale-90",
-											isPrevious
-												? "-translate-x-[10%] opacity-30 z-10"
-												: "",
-											isNext
-												? "translate-x-[10%] opacity-30 z-10"
-												: "",
-											!isActive && !isPrevious && !isNext
-												? "opacity-0"
-												: ""
+												? "z-20 opacity-100"
+												: "opacity-0",
+											isPrevious ? "z-10 opacity-30" : "",
+											isNext ? "z-10 opacity-30" : ""
 										)}
 										style={{
-											top: "0",
-											transform: `translateY(0px) ${
-												isPrevious
-													? "translateX(-60%)"
-													: isNext
-													? "translateX(60%)"
-													: "translateX(0)"
-											} ${
-												isActive
-													? "scale(1)"
-													: "scale(0.9)"
+											width: `${phoneWidth}px`,
+											transform: `translateX(${offsetX}px) scale(${
+												isActive ? 1 : 0.85
+											})`,
+											top: "50%",
+											left: "50%",
+											marginLeft: `-${phoneWidth / 2}px`,
+											marginTop: `-${
+												isMobile ? "225px" : "285px"
 											}`,
 										}}
 										aria-hidden={!isActive}
 									>
-										<div className="group">
-											<Iphone15Pro
-												width={isMobile ? 280 : 350}
-												height="auto"
-												src={image.src}
-												alt={image.alt}
-												className="transition-all duration-100"
-											/>
-										</div>
+										<Iphone15Pro
+											width={phoneWidth}
+											src={image.src}
+											alt={image.alt}
+										/>
 									</div>
 								);
 							})}
